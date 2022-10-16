@@ -78,8 +78,11 @@ WSGI_APPLICATION = 'chicken_feeding_system.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'feeder',
+        'USER': 'postgres',
+        'PASSWORD': '1000',
+        'HOST': 'localhost',
     }
 }
 
