@@ -17,7 +17,6 @@ def worker():
         update  public.api_feederdata
         set total_amount_of_feed=total_amount_of_feed-(number_of_chicken * feed_per_hen)
         where total_amount_of_feed>=(number_of_chicken * feed_per_hen)
-        from  public.api_feederdata 
         """
         query2 = """update  public.api_feederdata
         set feeder_opened=true
@@ -27,8 +26,7 @@ def worker():
 
         connection.commit()
         count = cursor.rowcount
-        print(count, "Feeder opened  successfully...")
-        print(count, "Feeds released  successfully...")
+        print(count, "Feeder opened  successfully...Feeds being released released")
 
     except (Exception, psycopg2.Error) as error:
         print("Failed to open feeder", error)
@@ -54,13 +52,13 @@ def terminate():
         postgres_insert_query = """ 
         update  public.api_feederdata
         set feeder_opened=FALSE
-        from  public.api_feederdata as s
         """
-        query2 = """update  public.api_feederdata
-        set feeder_opened=FALSE
-        where feeder_opened=false """
+        # query2 = """update  public.api_feederdata
+        # set feeder_opened=FALSE
+        # where feeder_opened=false """
         cursor.execute(postgres_insert_query)
-        cursor.execute(query2)
+        # cursor.execute(query2)
+
 
         connection.commit()
         count = cursor.rowcount
@@ -78,7 +76,7 @@ def terminate():
             print("PostgreSQL connection is closed")
 
 
-schedule.every().day.at("09:00").do(worker)
+schedule.every().day.at("12:01").do(worker)
 schedule.every().day.at("09:30").do(terminate)
 
 schedule.every().day.at("17:00").do(worker)
