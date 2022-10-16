@@ -21,7 +21,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.feeder_list_create_view),
     path("<int:pk>/", views.feeder_detail_view),
-    path("<int:pk>/delete/", views.feeder_delete_view),
-    path("<int:pk>/update/", views.feeder_update_view),
+    path("refill/<int:pk>/", views.feeder_refill_view),
+    path("delete/<int:pk>/", views.feeder_delete_view),
 
 ]
