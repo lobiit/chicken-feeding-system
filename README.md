@@ -8,3 +8,8 @@
 # to handle migrations run:
   python manage.py makemigrations
   python manage.py migrate
+
+
+# To run cron job
+  cd feeder
+  python worker.py
