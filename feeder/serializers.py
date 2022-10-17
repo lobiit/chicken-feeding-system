@@ -31,5 +31,5 @@ class FeederRefillSerializer(serializers.ModelSerializer):
         model = FeederData
         fields = [
             'amount_of_feeds_refill',
-            #'total_available_feed'
+            'total_available_feed'
         ]

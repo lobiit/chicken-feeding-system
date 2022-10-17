@@ -14,16 +14,18 @@ def worker():
         print("Connected...")
 
         postgres_insert_query = """ 
-        update  public.api_feederdata
+        update  public.feeder_feederdata
         set total_amount_of_feed=total_amount_of_feed-(number_of_chicken * feed_per_hen)
         where total_amount_of_feed>=(number_of_chicken * feed_per_hen)
         """
-        query2 = """update  public.api_feederdata
+        query2 = """update  public.feeder_feederdata
         set feeder_opened=true
         where feeder_opened=false """
         cursor.execute(postgres_insert_query)
         cursor.execute(query2)
-
+        query3 = """"
+        select * where total_amount_of_feed <=300000
+        """
         connection.commit()
         count = cursor.rowcount
         print(count, "Feeder opened  successfully...Feeds being released released")
@@ -50,7 +52,7 @@ def terminate():
         print("Connected...")
 
         postgres_insert_query = """ 
-        update  public.api_feederdata
+        update  public.feeder_feederdata
         set feeder_opened=FALSE
         """
         # query2 = """update  public.api_feederdata
@@ -58,7 +60,6 @@ def terminate():
         # where feeder_opened=false """
         cursor.execute(postgres_insert_query)
         # cursor.execute(query2)
-
 
         connection.commit()
         count = cursor.rowcount
@@ -76,9 +77,41 @@ def terminate():
             print("PostgreSQL connection is closed")
 
 
+def mail():
+    try:
+        connection = psycopg2.connect(user="postgres",
+                                      password="1000",
+                                      host="127.0.0.1",
+                                      port="5432",
+                                      database="feeder")
+        cursor = connection.cursor()
+        print("Connected...")
+        query3 = """"
+            select * from public.feeder_feederdata 
+            where total_amount_of_feed <=300000
+            """
+    finally:
+        if query3:
+            import smtplib, ssl
+            port = 465  # For SSL
+            smtp_server = "smtp.gmail.com"
+            sender_email = "raveenaora4@gmail.com"  # Enter your address
+            receiver_email = "raveenaora4@gmail.com@outlook.com"  # Enter receiver address
+            password = "password "
+            message = """\
+                Subject: Feeds Depleted
+                
+                Hello, the feeds are running low...kindly refill"""
+
+            context = ssl.create_default_context()
+            with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
+                server.login(sender_email, password)
+                server.sendmail(sender_email, receiver_email, message)
+
+
 schedule.every().day.at("12:01").do(worker)
 schedule.every().day.at("09:30").do(terminate)
-
+schedule.every().day.at("08:00").do(mail)
 schedule.every().day.at("17:00").do(worker)
 schedule.every().day.at("17:30").do(terminate)
 
