@@ -79,9 +79,9 @@ WSGI_APPLICATION = 'chicken_feeding_system.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'feeder',
+        'NAME': '',
         'USER': 'postgres',
-        'PASSWORD': '1000',
+        'PASSWORD': '',
         'HOST': 'localhost',
     }
 }

@@ -6,10 +6,10 @@ import schedule
 def worker():
     try:
         connection = psycopg2.connect(user="postgres",
-                                      password="1000",
+                                      password="",
                                       host="127.0.0.1",
                                       port="5432",
-                                      database="feeder")
+                                      database="")
         cursor = connection.cursor()
         print("Connected...")
 
@@ -44,10 +44,10 @@ def worker():
 def terminate():
     try:
         connection = psycopg2.connect(user="postgres",
-                                      password="1000",
+                                      password="",
                                       host="127.0.0.1",
                                       port="5432",
-                                      database="feeder")
+                                      database="")
         cursor = connection.cursor()
         print("Connected...")
 
@@ -80,10 +80,10 @@ def terminate():
 def mail():
     try:
         connection = psycopg2.connect(user="postgres",
-                                      password="1000",
+                                      password="",
                                       host="127.0.0.1",
                                       port="5432",
-                                      database="feeder")
+                                      database="")
         cursor = connection.cursor()
         print("Connected...")
         query3 = """"
@@ -95,8 +95,8 @@ def mail():
             import smtplib, ssl
             port = 465  # For SSL
             smtp_server = "smtp.gmail.com"
-            sender_email = "raveenaora4@gmail.com"  # Enter your address
-            receiver_email = "raveenaora4@gmail.com@outlook.com"  # Enter receiver address
+            sender_email = "email"  # Enter your address
+            receiver_email = ""  # Enter receiver address
             password = "password "
             message = """\
                 Subject: Feeds Depleted
@@ -107,9 +107,10 @@ def mail():
             with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
                 server.login(sender_email, password)
                 server.sendmail(sender_email, receiver_email, message)
+            print("mail sent")
 
 
-schedule.every().day.at("12:01").do(worker)
+schedule.every().day.at("09:00").do(worker)
 schedule.every().day.at("09:30").do(terminate)
 schedule.every().day.at("08:00").do(mail)
 schedule.every().day.at("17:00").do(worker)
