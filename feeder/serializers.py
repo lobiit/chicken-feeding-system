@@ -5,24 +5,28 @@ from .models import FeederData
 
 
 class FeederSerializer(serializers.ModelSerializer):
-    url = serializers.SerializerMethodField(read_only=True)
+    refill_url = serializers.SerializerMethodField(read_only=True)
+    url = serializers.HyperlinkedIdentityField(
+        view_name='feeder-detail',
+        lookup_field='pk'
+    )
 
     class Meta:
         model = FeederData
         fields = [
             'url',
+            'refill_url',
             'id',
             'feed_per_hen',
             'number_of_chicken',
             'feeder_opened',
         ]
 
-    def get_url(self, obj):
-        # return f"/api/products/{obj.pk}"
+    def get_refill_url(self, obj):
         request = self.context.get('request')
         if request is None:
             return None
-        return reverse("feeder-detail", kwargs={"pk": obj.pk}, request=request)
+        return reverse("feeder-refill", kwargs={"pk": obj.pk}, request=request)
 
 
 class FeederDetailSerializer(serializers.ModelSerializer):
